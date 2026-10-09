@@ -23,7 +23,6 @@ export class AuthService {
 
         const user = this.userService.createUser({ ...registerUserDto, password: hash })
 
-        console.log("User", user);
-        return {}
+        return user
     }
 }

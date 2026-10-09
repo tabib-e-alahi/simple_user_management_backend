@@ -1,5 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 
+
+type Role = "USER" | "ADMIN" | "SUPER_ADMIN";
+
 export class RegisterUserDto {
     @ApiProperty({
         example: 'Tabib',
@@ -20,4 +23,5 @@ export class RegisterUserDto {
         example: '12345678',
     })
     password: string;
+
 }
