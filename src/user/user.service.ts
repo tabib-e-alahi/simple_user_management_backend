@@ -9,8 +9,8 @@ export class UserService {
     async createUser(userData: RegisterUserDto) {
         return await this.prisma.user.create({
             data: {
-                firstName: userData.fName,
-                lastName: userData.lName,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
                 email: userData.email,
                 password: userData.password,
             }

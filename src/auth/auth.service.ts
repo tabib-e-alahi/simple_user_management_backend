@@ -23,6 +23,6 @@ export class AuthService {
 
         const user = this.userService.createUser({ ...registerUserDto, password: hash })
 
-        return user
+        return user;
     }
 }
