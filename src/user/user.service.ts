@@ -6,7 +6,16 @@ import { PrismaService } from '../prisma/prisma.service.js';
 export class UserService {
     constructor(private readonly prisma: PrismaService) { }
 
+    findByEmail(email: string) {
+        return this.prisma.user.findUnique({
+            where: {
+                email
+            }
+        })
+    }
+
     async createUser(userData: RegisterUserDto) {
+        try {
         return await this.prisma.user.create({
             data: {
                 firstName: userData.firstName,
@@ -15,5 +24,8 @@ export class UserService {
                 password: userData.password,
             }
         })
+        } catch (error) {
+            if(isPrismaError())
+        }
     }
 }
