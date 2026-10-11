@@ -17,6 +17,15 @@ export class UserService {
         })
     }
 
+    // Only for login: includes the password hash, which is hidden everywhere else.
+    // Never return this result to the client.
+    findByEmailWithPassword(email: string) {
+        return this.prisma.user.findUnique({
+            where: { email },
+            omit:{password: false} // by this the hashed password will also included with response
+        })
+    }
+
     async createUser(userData: CreateUserData) {
         try {
             return await this.prisma.user.create({
@@ -37,4 +46,5 @@ export class UserService {
             throw error;
         }
     }
+
 }

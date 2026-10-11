@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { RegisterUserDto } from './dto/registerUser.dto.js';
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { ResponseMessage } from '../common/decorators/response-message.decorator.js';
+import { LoginUserDto } from './dto/loginUser.dto.js';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -18,5 +19,15 @@ export class AuthController {
     register(@Body() registerUserDto: RegisterUserDto) {
         return this.authService.register(registerUserDto)
 
+    }
+
+    @Post('login')
+    @HttpCode(HttpStatus.OK)
+    @ResponseMessage('Login successful')
+    @ApiOkResponse({ description: 'Login successful' })
+    @ApiBadRequestResponse({ description: 'Validation failed' })
+    @ApiUnauthorizedResponse({ description: 'Invalid email or password' })
+    login(@Body() loginUserDto: LoginUserDto) {
+        return this.authService.login(loginUserDto)
     }
 }
