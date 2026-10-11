@@ -14,9 +14,9 @@ export class AuthService {
         // Logics for registration
 
         /**
-         * 1. Check user already exists or not (by email)
-         * 2. Hash the password
-         * 3. store the user into the db
+         * 1. Check user already exists or not (by email) -- Done
+         * 2. Hash the password --> done
+         * 3. store the user into the db --> done
          * 4. generate jwt tokens
          * 5. send token in response
          */
@@ -36,8 +36,13 @@ export class AuthService {
 
         const passwordHashed = await bcrypt.hash(registerUserDto.password, BCRYPT_SALT_ROUNDS);
 
-        return this.userService.createUser({ ...registerUserDto, password: passwordHashed })
+        return this.userService.createUser({
+            firstName: registerUserDto.firstName,
+            lastName: registerUserDto.lastName,
+            email: registerUserDto.email,
+            password: passwordHashed
+        })
 
-        
+
     }
 }

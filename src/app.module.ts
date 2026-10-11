@@ -19,6 +19,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor.
         whitelist: true,
         forbidNonWhitelisted: true,
         transform: true,
+        stopAtFirstError: true,
         exceptionFactory: validationExceptionFactory,
       }),
     },

@@ -23,6 +23,7 @@ coverage/
 # Runtime files
 *.pid
 *.seed
+*.tsbuildinfo
 
 # OS and editor files
 .DS_Store

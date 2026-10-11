@@ -19,9 +19,4 @@ export class AuthController {
         return this.authService.register(registerUserDto)
 
     }
-
-    @Get()
-    findOne() {
-        return "hellow auth"
-    }
 }
