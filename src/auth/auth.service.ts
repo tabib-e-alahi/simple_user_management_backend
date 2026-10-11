@@ -3,6 +3,8 @@ import { UserService } from '../user/user.service.js';
 import { RegisterUserDto } from './dto/registerUser.dto.js';
 import bcrypt from 'bcrypt'
 import { LoginUserDto } from './dto/loginUser.dto.js';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './types/jwt-payload.type.js';
 
 const BCRYPT_SALT_ROUNDS = 10;
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credintials."
@@ -13,7 +15,10 @@ export class AuthService {
     //Used when the email does not exists, so that path taks as long as a real check, for confusing hackers about time
     private readonly dummyPasswordHash = bcrypt.hashSync('dummy-password-for-timing', BCRYPT_SALT_ROUNDS);
 
-    constructor(private readonly userService: UserService) { }
+    constructor(
+        private readonly userService: UserService,
+        private readonly jwtService: JwtService
+    ) { }
 
     async register(registerUserDto: RegisterUserDto) {
 
@@ -59,6 +64,8 @@ export class AuthService {
 
         //Take the hash out before anyting leaves this method
         const { password: _password, ...safeUser } = user;
-        return safeUser;
+        const payload: JwtPayload = { sub: user.id, role: user.role };
+        const accessToken = await this.jwtService.signAsync(payload);
+        return { user: safeUser, accessToken };
     }
 }

@@ -9,9 +9,10 @@ import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { validationExceptionFactory } from './common/pipes/validation-exception.factory.js';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor.js';
+import { validateEnv } from './config/env.validation.js';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, UserModule, PrismaModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, validate: validateEnv }), AuthModule, UserModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService, {
       provide: APP_PIPE,
