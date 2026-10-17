@@ -6,7 +6,7 @@ import { IsByteLength, IsEmail, IsNotEmpty, IsString, MaxLength } from "class-va
 // With stopAtFirstError, class-validator runs decorators bottom → top.
 export class LoginUserDto {
 
-    @ApiProperty({ example: "example@example.com" })
+    @ApiProperty({ example: "test@example.com" })
     @Transform(({ value }) => typeof value === 'string' ? value.trim().toLowerCase() : value)
     @IsEmail({}, { message: "Please provide a valid email address" })
     @MaxLength(254, { message: "Email must not exceed 254 characters" })

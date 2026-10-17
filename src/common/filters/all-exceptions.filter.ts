@@ -37,8 +37,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // 5xx = our bug or infrastructure problem: always log with the stack trace
     if (statusCode >= 500) {
+      const prismaCode =
+        exception instanceof Prisma.PrismaClientKnownRequestError ? ` (Prisma ${exception.code})` : '';
       this.logger.error(
-        `${httpAdapter.getRequestMethod(request)} ${httpAdapter.getRequestUrl(request)} → ${statusCode}`,
+        `${httpAdapter.getRequestMethod(request)} ${httpAdapter.getRequestUrl(request)} → ${statusCode}${prismaCode}`,
         exception instanceof Error ? exception.stack : String(exception),
       );
     }

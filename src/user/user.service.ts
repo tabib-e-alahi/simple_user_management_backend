@@ -22,9 +22,14 @@ export class UserService {
     findByEmailWithPassword(email: string) {
         return this.prisma.user.findUnique({
             where: { email },
-            omit:{password: false} // by this the hashed password will also included with response
+            omit: { password: false } // by this the hashed password will also included with response
         })
     }
+
+    findById(id: number) {
+        return this.prisma.user.findUnique({ where: { id } })
+    }
+
 
     async createUser(userData: CreateUserData) {
         try {

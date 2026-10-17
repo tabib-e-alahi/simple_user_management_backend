@@ -13,6 +13,7 @@ async function bootstrap() {
       'This system contains api configuration of user profile management',
     )
     .setVersion("0.1")
+    .addBearerAuth()
     .build()
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

@@ -5,6 +5,8 @@ import { UserModule } from '../user/user.module.js';
 import {JwtModule} from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config';
 import { Env } from '../config/env.validation.js';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
 
 
 @Module({
@@ -22,6 +24,11 @@ import { Env } from '../config/env.validation.js';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+    providers: [
+    AuthService,
+    // Every route in the app needs a valid token, unless it is marked @Public()
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+  ]
+
 })
 export class AuthModule { }
