@@ -19,12 +19,26 @@ enum UserRole {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  firstName String @db.VarChar(50)
-  lastName  String @db.VarChar(50)
-  email     String   @unique @db.VarChar(254)
-  password  String 
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int            @id @default(autoincrement())
+  firstName     String         @db.VarChar(50)
+  lastName      String         @db.VarChar(50)
+  email         String         @unique @db.VarChar(254)
+  password      String
+  role          UserRole       @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken[]
+}
+
+// One row per login session. We store only a hash of the token, never the token itself.
+model RefreshToken {
+  id        Int       @id @default(autoincrement())
+  tokenHash String    @unique
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }

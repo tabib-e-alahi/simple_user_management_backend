@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { LoginUserDto } from './dto/loginUser.dto.js';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './types/jwt-payload.type.js';
+import { TokenService } from './token.service.js';
 
 const BCRYPT_SALT_ROUNDS = 10;
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credintials."
@@ -17,7 +18,7 @@ export class AuthService {
 
     constructor(
         private readonly userService: UserService,
-        private readonly jwtService: JwtService
+        private readonly tokenService: TokenService,
     ) { }
 
     async register(registerUserDto: RegisterUserDto) {
@@ -64,8 +65,24 @@ export class AuthService {
 
         //Take the hash out before anyting leaves this method
         const { password: _password, ...safeUser } = user;
-        const payload: JwtPayload = { sub: user.id, role: user.role };
-        const accessToken = await this.jwtService.signAsync(payload);
-        return { user: safeUser, accessToken };
+        const { accessToken, refreshToken } = await this.tokenService.issueTokens(user);
+        return { user: safeUser, accessToken, refreshToken };
+
     }
+
+        // Swap the refresh token from the cookie for a new access token + refresh token
+    refresh(refreshToken: string | undefined) {
+        if (!refreshToken) {
+            throw new UnauthorizedException('Invalid or expired refresh token')
+        }
+        return this.tokenService.rotate(refreshToken)
+    }
+
+    // End this session. No token = nothing to do, still a successful logout.
+    async logout(refreshToken: string | undefined) {
+        if (refreshToken) {
+            await this.tokenService.revoke(refreshToken)
+        }
+    }
+
 }

@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { UserModule } from '../user/user.module.js';
-import {JwtModule} from '@nestjs/jwt'
+import { JwtModule } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config';
 import { Env } from '../config/env.validation.js';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
+import { TokenService } from './token.service.js';
 
 
 @Module({
@@ -19,13 +20,14 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
           expiresIn: config.get('JWT_ACCESS_EXPIRES_IN', { infer: true }),
           algorithm: 'HS256'
         },
-        verifyOptions: {algorithms: ['HS256']}
+        verifyOptions: { algorithms: ['HS256'] }
       })
     })
   ],
   controllers: [AuthController],
-    providers: [
+  providers: [
     AuthService,
+    TokenService,
     // Every route in the app needs a valid token, unless it is marked @Public()
     { provide: APP_GUARD, useClass: JwtAuthGuard },
   ]
